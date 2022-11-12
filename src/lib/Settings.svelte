@@ -12,7 +12,10 @@
 	const close = () => {
 		$options.settingsPopup = false;
 	}
-
+  // de chat werkt niet ik ik moet dat nog oplossen maar ik heb een hOKIeel goed idee, ik vind mn persoonlijke vscode setup fijner dan dit programmeren dus
+  //  https://prod.liveshare.vsengsaas.visualstudio.com/join?61EDFBDE149F0146BD3495B09BC323C57BEE
+  // probeer dit
+  // kunnen we dan samen editen? ja in mijn setup dingus downloadin oh je hebt gen vscode?
   const settings = [
     {n:"Dark Mode", t:"slider", v: $options.darkMode},{n:"Extra setting", t:"slider", v: $options.darkMode}
 	]
