@@ -1,8 +1,9 @@
 import { writable } from 'svelte/store'
 
 const exampleSettings = {
-  settingsPopup: true,
-  darkMode: window.matchMedia("(prefers-color-scheme:dark)").matches
+  settingsPopup: {v:true, t:"none"},
+  darkMode: {v: window.matchMedia("(prefers-color-scheme:dark)").matches, t:"slider", n:"Dark mode"},
+  // mm what options shall i make 
 }
 // export const options = writable(localStorage.options == undefined ? exampleSettings : JSON.parse(localStorage.options));
 export const options = writable(exampleSettings); //even tijdelijk, ik ga niet elke keer cookies wissen :\

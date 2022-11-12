@@ -32,10 +32,10 @@
 <ul class="grow">
   {#each msgChains as msg_c}
     <div class="flex-col w-fit">
-      {#each msg_c as msg}
+      {#each msg_c as msg }
         {#if msg.msgChain === "top" || msg.msgChain === "single"}
-          <div class="bg-white dark:bg-gray-700 flex mx-3 mt-3 py-2 px-3 rounded-lg shadow-lg w-full" class:rounded-b-none={msgChains[i_chains][i].msgChain === "top"} >
-            <div class="flex justify-center items-center flex-shrink-0" class:invisible={chainMsg(msg,i)}>
+          <div class="bg-white dark:bg-gray-700 flex mx-3 mt-3 py-2 px-3 rounded-lg shadow-lg w-full" class:rounded-b-none={msg.msgChain === "top"} >
+            <div class="flex justify-center items-center flex-shrink-0" class:invisible={msg.msgChain !== "top" || msg.msgChain !== "single"}>
               <img src={msg.a} alt="avatar" class="w-10 h-10 rounded-full"/>
             </div>
             <div class="ml-3 flex justify-center flex-col">
@@ -49,7 +49,7 @@
             </div>
           </div>
         {:else}
-        <div class="bg-white dark:bg-gray-700 mx-3 px-3 pb-2 shadow-lg w-full flex" class:rounded-b-lg={chainBottom(msg,i)}>
+        <div class="bg-white dark:bg-gray-700 mx-3 px-3 pb-2 shadow-lg w-full flex" class:rounded-b-lg={msg.msgChain === "bottom"}>
           <div class="flex-shrink-0 w-10 h-8">&nbsp;</div>
           <span class="ml-3 dark:text-white break-all">{@html msg.m}</span>
         </div>

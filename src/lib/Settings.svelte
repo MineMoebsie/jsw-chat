@@ -1,40 +1,38 @@
 <script>
   import { options } from './stores'
   import { onMount } from 'svelte'
-	import { cubicOut, cubicIn } from 'svelte/easing'
-	import { fly } from 'svelte/transition'
+  import { cubicOut, cubicIn } from 'svelte/easing'
+  import { fly } from 'svelte/transition'
   import Slider from './Slider.svelte'
 
-  const apply = () => {
-    $options.settingsPopup = false;
-  };
+  let tOptions = {...$options};
 
+  const apply = () => {
+    $options.settingsPopup.v = false;
+    $options = {...tOptions};
+  };
 	const close = () => {
-		$options.settingsPopup = false;
+		$options.settingsPopup.v = false;
+    tOptions = $options;
 	}
-  // de chat werkt niet ik ik moet dat nog oplossen maar ik heb een hOKIeel goed idee, ik vind mn persoonlijke vscode setup fijner dan dit programmeren dus
-  //  https://prod.liveshare.vsengsaas.visualstudio.com/join?61EDFBDE149F0146BD3495B09BC323C57BEE
-  // probeer dit
-  // kunnen we dan samen editen? ja in mijn setup dingus downloadin oh je hebt gen vscode?
-  const settings = [
-    {n:"Dark Mode", t:"slider", v: $options.darkMode},{n:"Extra setting", t:"slider", v: $options.darkMode}
-	]
 </script>
 <!-- tailwindcss at its finest elegancy and readibility -->
-{#if $options.settingsPopup}
+{#if $options.settingsPopup.v}
 	<div class="absolute left-0 bottom-0 lg:left-2/3 lg:bottom-0 w-full min-h-1/2 max-h-4/6 lg:h-full lg:min-w-fit lg:w-1/3 flex flex-col bg-white dark:bg-gray-900 dark:text-white border-b-4 border-blue-400 rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none p-3" 
-		in:fly="{{ x: -200, duration: 2000, easing: cubicIn }}" out:fly="{{ x: 200, duration: 2000, easing: cubicOut }}" class:hidden={!$options.settingsPopup}>
-		<!-- class:hidden={!$options.settingsPopup} -->
+		in:fly="{{ x: -200, duration: 2000, easing: cubicIn }}" out:fly="{{ x: 200, duration: 2000, easing: cubicOut }}" class:hidden={!$options.settingsPopup.v}>
+		<!-- class:hidden={!$options.settingsPopup.v} -->
 		<h3 class="text-3xl text-center pb-3">Settings</h3>
 		<hr class="dark:border-gray-500 border-gray-300"/>
 		<div class="grow touch-pan-y">
-			{#each settings as setting}
-				<div class="border-4 border-gray-300 dark:border-gray-700 w-full p-4 rounded-lg first:mt-2 mb-2 flex shadow-lg hover:bg-slate-200 dark:hover:bg-gray-800">
-					<span class="grow text-xl font-semibold align-middle">{setting.n}</span>
-					{#if setting.t === "slider"}
-						<Slider checked={true}/>
-					{/if}
-				</div>
+			{#each Object.keys(tOptions) as i}
+        {#if tOptions[i].t !== "none"}
+          <div class="border-4 border-gray-300 dark:border-gray-700 w-full p-4 rounded-lg first:mt-2 mb-2 flex shadow-lg hover:bg-slate-200 dark:hover:bg-gray-800">
+            <span class="grow text-xl font-semibold align-middle">{tOptions[i].n}</span>
+            {#if tOptions[i].t === "slider"}
+              <Slider bind:checked={tOptions[i].v}/>
+            {/if}
+          </div>
+        {/if}
 			{/each}
 		</div>
 		<hr class="dark:border-gray-500 border-gray-300"/>
