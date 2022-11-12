@@ -26,7 +26,7 @@
 		<hr class="dark:border-gray-500 border-gray-300"/>
 		<div class="grow touch-pan-y">
 			{#each settings as setting}
-				<div class="border border-4 border-gray-300 dark:border-gray-700 w-full p-4 rounded-lg first:mt-2 mb-2 flex shadow-lg hover:bg-slate-200 dark:hover:bg-gray-800">
+				<div class="border-4 border-gray-300 dark:border-gray-700 w-full p-4 rounded-lg first:mt-2 mb-2 flex shadow-lg hover:bg-slate-200 dark:hover:bg-gray-800">
 					<span class="grow text-xl font-semibold align-middle">{setting.n}</span>
 					{#if setting.t === "slider"}
 						<Slider checked={true}/>

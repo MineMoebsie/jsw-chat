@@ -1,6 +1,6 @@
 <script>
   export let checked = false
-  const id = Date.now();
+  const id = Date.now().toString();
 </script>
 
 <label for={id} class="flex items-center cursor-pointer">

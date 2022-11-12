@@ -6,42 +6,35 @@
     const dd = new Date(d);
     return `${isToday(dd) ? "Today" : isYesterday(dd) ? "Yesterday" : format(dd,"dd MMM")}, ${format(dd, "hh:mm a")}`
   }
-
-  // const chainTop = (msg, i) => i === 0 ? $messages[i + 1].id === msg.id : $messages[i + 1] !== undefined ? $messages[i + 1].id === msg.id : false; // Is it message the top message of chain.
-	// const chainMsg = (msg, i) => i === 0 ? false : $messages[i - 1].id === msg.id; // Is it message a chained message.
  
-	const chainMsg = (msg, i) => i === 0 ? false : $messages[i+1] === undefined ? false : $messages[i - 1].id === msg.id && $messages[i + 1].id === msg.id; // Is it message a chained message
-	
-	const chainTop = (msg, i) => i === 0 ? $messages[i + 1].id === msg.id : $messages[i+1] === undefined ? false : $messages[i+1].id === msg.id && $messages[i-1].id !== msg.id; // Is part of chained message (in the middle of it)
- 
-  const chainBottom = (msg, i) => $messages[i+1] === undefined ? false : $messages[i + 1].id !== msg.id; // Is it the bottom chained message
+  const chainMsg = (msg, i) => i === 0 ? false : $messages[i+1] === undefined ? false : $messages[i - 1].id === msg.id && $messages[i + 1].id === msg.id;
+  const chainTop = (msg, i) => i === 0 ? $messages[i + 1].id === msg.id : $messages[i+1] === undefined ? false : $messages[i+1].id === msg.id && $messages[i-1].id !== msg.id;
+  const chainBottom = (msg, i) => $messages[i+1] === undefined ? false : $messages[i + 1].id !== msg.id;
+  const calcChain = (msg, i) => chainTop(msg, i) ? "top" : chainMsg(msg, i) ? "middle" : chainBottom(msg, i) ? "bottom" : "single";
 
-	const msgChains = [] //structure: [ [ {msg u: bla, m: bla}, {msg content}, {...} ], [ {}, {}, {} ], [ {}, {}, {} ] etc.]
+  let oldMessages = []
+  let msgChains = [] //structure: [ [ {msg u: bla, m: bla}, {msg content}, {...} ], [ {}, {}, {} ], [ {}, {}, {} ] etc.]
 
-	var loopVar = {};
-	for (let i = 0; i < $messages.length; i++) {
-		loopVar = $messages[i]
-		if (chainTop($messages[i], i)) {
-			loopVar.msgChain = "top"
-			msgChains.push([loopVar])
-		} else if (chainMsg($messages[i], i)) {
-			loopVar.msgChain = "middle"
-			msgChains[msgChains.length -1].push(loopVar)
-		} else if (chainBottom($messages[i], i)) {
-			loopVar.msgChain = "bottom"
-			msgChains[msgChains.length -1].push(loopVar)
-		} else { // it is a singular message (not part of chain)
-			loopVar.msgChain = "single"
-			msgChains.push([loopVar])
-		}
-	}
-	console.log(msgChains)
+  const parseMsgChains = msg => {
+    const msgs = msg.filter(v => !oldMessages.includes(v));
+    for (let i in msgs) {
+      const ii = parseInt(i);
+      let im = msgs[ii];
+      im.msgChain = calcChain(im, ii);
+      calcChain(im, ii) === "top" || calcChain(im, ii) === "single" ? msgChains.push([im]) : msgChains[msgChains.length -1].push(im);
+      oldMessages = msg;
+      console.log(im)
+    }
+    oldMessages = msg;
+  }
+
+  messages.subscribe(v => parseMsgChains(v));
 </script> 
 
 <ul class="grow">
 {#each msgChains as msg_c, i_chains}
-	<div class="flex-col w-fit">
-	{#each msgChains[i_chains] as msg, i}
+  <div class="flex-col w-fit">
+  {#each msgChains[i_chains] as msg, i}
     {#if msgChains[i_chains][i].msgChain === "top" || msgChains[i_chains][i].msgChain === "single"}
       <div class="bg-white dark:bg-gray-700 flex mx-3 mt-3 py-2 px-3 rounded-lg shadow-lg w-full" class:rounded-b-none={msgChains[i_chains][i].msgChain === "top"} >
         <div class="flex justify-center items-center flex-shrink-0" class:invisible={chainMsg(msg,i)}>
@@ -63,12 +56,12 @@
         <span class="ml-3 dark:text-white break-all">{@html msg.m}</span>
       </div>
     {/if}
-	{/each}
-		</div>
+  {/each}
+    </div>
   {/each}
 
 
-	
+  
 <!-- 	{#each $messages as msg, i}
     {#if !chainMsg(msg,i)}
       <div class="bg-white dark:bg-gray-700 flex mx-3 mt-3 py-2 px-3 rounded-lg shadow-lg  w-fit max-w-full" class:rounded-b-none={chainTop(msg,i)} >
